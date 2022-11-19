@@ -12,6 +12,7 @@
   {env,
    [
     {api_server_endpoint, <<"https://api.telegram.org">>},
+    {await_timeout, 10000},
     {keepalive_pool,
      [{init_count, 1},
       {max_count, 10},

@@ -175,7 +175,7 @@ api_call(Bot, Method, Payload) ->
 api_call({_ApiServerEndpoint, Token}, _Bot, Method, Payload) ->
     Url = <<"/bot", Token/binary, "/", Method/binary>>,
     case do_api_call(Url, Payload) of
-        {Code, Hdrs, Body} ->
+        {Code, Hdrs, Body} when Code >= 200, Code < 300 ->
             ContentType = cow_http_hd:parse_content_type(
                             proplists:get_value(<<"content-type">>, Hdrs)),
             case {Body, ContentType, Code} of
@@ -189,6 +189,7 @@ api_call({_ApiServerEndpoint, Token}, _Bot, Method, Payload) ->
                             {error, telegram, {ErrCode, Code, ErrDescription}}
                     end
             end;
+        {Code, _Hdrs, _Body} -> {error, http, #{status_code => Code}};
         {error, ErrReason} -> {error, http, ErrReason}
     end.
 

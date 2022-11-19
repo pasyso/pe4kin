@@ -64,7 +64,7 @@ post(Path, Headers0, {multipart, Multipart}) ->
 
 
 await(C, Ref) ->
-    case gun:await(C, Ref) of
+    case gun:await(C, Ref, pe4kin:get_env(await_timeout, 5000)) of
         {response, fin, Status, Headers} ->
             {Status, Headers, []};
         {response, nofin, Status, Headers} ->
